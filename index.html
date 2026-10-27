@@ -1372,6 +1372,7 @@ button:focus-visible { outline: 3px solid var(--paper); outline-offset: 3px; }
   var next = document.getElementById('next');
   var zoomBtn = document.getElementById('zoom');
   var keys = sheets.map(function(s) { return s.dataset.key; });
+  window.PCInitialHash = (location.hash || '').slice(1); // read before render() rewrites it
   var i = Math.max(0, keys.indexOf((location.hash || '').slice(1)));
   var zoom = false;
   function fit() {
@@ -3818,6 +3819,32 @@ window.PC_CONFIG = {"id": "milan-2026-814ae6c442", "city": "Milano", "title": "P
   document.addEventListener('pc-scores', function() { check(true); });
   document.addEventListener('pc-reset', function() { markSeen([]); render(); });
   check(false);
+})();
+</script>
+<script>
+(function() {
+  // Where the game opens:
+  // 1. a link or reload with a page in it (#scores) stays on that page;
+  // 2. otherwise the page this phone was on, if that was in the last 12 hours;
+  // 3. otherwise a smart default: Teaser before the start, Scorebord during the night,
+  //    Finale once hole 18 is saved or the night is over.
+  var CFG = window.PC_CONFIG, KEY = CFG.storagePrefix + 'lastpage', KEEP = 12 * 3600000;
+  function smart() {
+    var now = Date.now(), start = Date.parse(CFG.startUtc), end = Date.parse(CFG.endUtc);
+    if (now < start) return 'teaser';
+    var last = CFG.holes.length;
+    var done = window.PCStore && window.PCStore.all().some(function(e) { return e.type === 'hole' && e.hole === last; });
+    if (done || now > end) return 'finale';
+    return 'scores';
+  }
+  var asked = window.PCInitialHash;
+  if (!asked && window.PCGo) {
+    var last = null; try { last = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) {}
+    window.PCGo(last && last.key && Date.now() - last.at < KEEP ? last.key : smart());
+  }
+  function remember(k) { try { localStorage.setItem(KEY, JSON.stringify({ key: k, at: Date.now() })); } catch (e) {} }
+  document.addEventListener('pc-page', function(e) { remember(e.detail); });
+  if (window.PCCurrent) remember(window.PCCurrent());
 })();
 </script>
 
