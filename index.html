@@ -3757,7 +3757,7 @@ window.PC_CONFIG = {"id": "milan-2026-814ae6c442", "city": "Milano", "title": "P
   var ol = document.getElementById('dk-list'); if (!ol) return;
   var LABEL = { wijn: 'Wijn', bier: 'Bier', spritz: 'Spritz', cocktail: 'Cocktail', regel: 'Speciale hole' };
   var SEEN = CFG.storagePrefix + 'drank-seen';
-  function done() { var m = {}; S.all().forEach(function(e) { if (e.type === 'hole') m[e.hole] = true; }); return m; }
+  function done() { var m = {}; S.all().forEach(function(e) { if (e.type === 'hole') m[e.hole] = e.at || 1; }); return m; }
   function isOpen(n, d) { return n === 1 || !!d[n - 1]; }
   window.PCDrinkOpen = function(n) { return isOpen(n, done()); };
   function el(tag, cls, txt) { var x = document.createElement(tag); if (cls) x.className = cls; if (txt != null) x.textContent = txt; return x; }
@@ -3811,7 +3811,13 @@ window.PC_CONFIG = {"id": "milan-2026-814ae6c442", "city": "Milano", "title": "P
   function markSeen(list) { try { localStorage.setItem(SEEN, JSON.stringify(list)); } catch (e) {} }
   function check(announce) {
     var d = done(), s = seen(), fresh = [];
-    CFG.holes.forEach(function(h) { if (h.drink && isOpen(h.n, d) && s.indexOf(h.n) < 0) { s.push(h.n); if (h.n > 1) fresh.push(h); } });
+    CFG.holes.forEach(function(h) {
+      if (!h.drink || !isOpen(h.n, d) || s.indexOf(h.n) >= 0) return;
+      s.push(h.n);
+      // only announce the drink you are about to order, and only if its unlock just happened
+      // (a phone that opens the game later doesn't get stale pop-ups)
+      if (h.n > 1 && !d[h.n] && Date.now() - d[h.n - 1] < 10 * 60000) fresh.push(h);
+    });
     markSeen(s);
     if (announce && fresh.length) { queue = queue.concat(fresh.slice(-1)); showNext(); } // only the newest, no pile-up
     render();
@@ -3840,7 +3846,19 @@ window.PC_CONFIG = {"id": "milan-2026-814ae6c442", "city": "Milano", "title": "P
   var asked = window.PCInitialHash;
   if (!asked && window.PCGo) {
     var last = null; try { last = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) {}
-    window.PCGo(last && last.key && Date.now() - last.at < KEEP ? last.key : smart());
+    var useLast = last && last.key && Date.now() - last.at < KEEP;
+    var auto = useLast ? last.key : smart();
+    window.PCGo(auto);
+    // a phone that opens for the first time gets the scores a moment later from the live database:
+    // if that shows hole 18 is done, switch to the Finale (unless the player already moved on)
+    if (!useLast && auto === 'scores') {
+      var t0 = Date.now();
+      var onScores = function() {
+        if (Date.now() - t0 > 10000) { document.removeEventListener('pc-scores', onScores); return; }
+        if (window.PCCurrent() === 'scores' && smart() === 'finale') { document.removeEventListener('pc-scores', onScores); window.PCGo('finale'); }
+      };
+      document.addEventListener('pc-scores', onScores);
+    }
   }
   function remember(k) { try { localStorage.setItem(KEY, JSON.stringify({ key: k, at: Date.now() })); } catch (e) {} }
   document.addEventListener('pc-page', function(e) { remember(e.detail); });
