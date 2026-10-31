@@ -496,6 +496,15 @@ button:focus-visible { outline: 3px solid var(--paper); outline-offset: 3px; }
 .dk-card.flip { animation: dkFlip .7s cubic-bezier(.2,.8,.2,1); }
 @keyframes dkFlip { 0% { transform: perspective(800px) rotateY(90deg) scale(.8); opacity: 0; } 60% { transform: perspective(800px) rotateY(-8deg); opacity: 1; } 100% { transform: none; } }
 @media (prefers-reduced-motion: reduce) { .dk-card.flip { animation: none; } }
+#intro { position: fixed; inset: 0; z-index: 300; background: #0E3B2C; display: grid; place-items: center; transition: opacity .6s; }
+#intro.out { opacity: 0; pointer-events: none; }
+#intro-video { width: 100%; height: 100%; object-fit: contain; background: #0E3B2C; }
+.intro-chip { position: absolute; top: max(14px, env(safe-area-inset-top)); font: 700 14px/1 var(--body); color: #F7F5F0; background: rgba(4,18,13,.55); border: 2px solid rgba(247,245,240,.6); border-radius: 999px; padding: 12px 16px; min-height: 44px; cursor: pointer; }
+#intro-skip { right: 14px; }
+#intro-sound { left: 14px; }
+#intro-begin { position: absolute; left: 50%; bottom: max(48px, calc(env(safe-area-inset-bottom) + 32px)); transform: translate(-50%, 30px) scale(.9); opacity: 0; transition: opacity .5s, transform .5s cubic-bezier(.2,1.5,.4,1); font: 400 34px/1 var(--display); letter-spacing: .06em; color: #fff; background: #B5121B; border: 3px solid #F2D16B; border-radius: 999px; padding: 20px 64px; min-height: 64px; cursor: pointer; box-shadow: 0 16px 40px rgba(0,0,0,.45); }
+#intro-begin.on { opacity: 1; transform: translate(-50%, 0) scale(1); }
+#intro button:focus-visible { outline: 3px solid #F2D16B; outline-offset: 3px; }
 </style>
 <div class="app">
   <div class="stage-wrap">
@@ -2897,6 +2906,7 @@ window.PC_CONFIG = {"id": "milan-2026-814ae6c442", "city": "Milano", "title": "P
   });
 
   function busy() {
+    if (window.PCIntroOpen && window.PCIntroOpen()) return true;
     if (!ov.hidden || document.hidden) return true;
     var a = document.activeElement;
     if (a && /^(INPUT|SELECT|TEXTAREA)$/.test(a.tagName)) return true;
@@ -3442,6 +3452,7 @@ window.PC_CONFIG = {"id": "milan-2026-814ae6c442", "city": "Milano", "title": "P
   window.PCPhotoBomb = function(withScore) { show(CH[Math.floor(Math.random() * CH.length)], null, withScore); };
 
   function busy() {
+    if (window.PCIntroOpen && window.PCIntroOpen()) return true;
     if (!ov.hidden || document.hidden) return true;
     if (window.PCAlarmOpen && window.PCAlarmOpen()) return true;
     var a = document.activeElement; if (a && /^(INPUT|SELECT|TEXTAREA)$/.test(a.tagName)) return true;
@@ -3863,6 +3874,33 @@ window.PC_CONFIG = {"id": "milan-2026-814ae6c442", "city": "Milano", "title": "P
   function remember(k) { try { localStorage.setItem(KEY, JSON.stringify({ key: k, at: Date.now() })); } catch (e) {} }
   document.addEventListener('pc-page', function(e) { remember(e.detail); });
   if (window.PCCurrent) remember(window.PCCurrent());
+})();
+</script>
+<script>
+(function() {
+  // First open on a phone: play the teaser once, then a "Begin" button opens the game.
+  // Stored outside the game prefix, so "Nieuw spel" does not replay it.
+  var KEY = 'pubcrawl-intro-seen';
+  try { if (localStorage.getItem(KEY)) return; } catch (e) {}
+  var ov = document.createElement('div'); ov.id = 'intro'; ov.setAttribute('role', 'dialog'); ov.setAttribute('aria-label', 'Teaser');
+  ov.innerHTML = '<video id="intro-video" playsinline webkit-playsinline preload="auto" src="teaser.mp4"></video>'
+    + '<button type="button" id="intro-sound" class="intro-chip" hidden>Geluid aan</button>'
+    + '<button type="button" id="intro-skip" class="intro-chip">Overslaan</button>'
+    + '<button type="button" id="intro-begin" hidden>Begin</button>';
+  document.body.appendChild(ov);
+  window.PCIntroOpen = function() { return !!document.getElementById('intro'); };
+  var v = document.getElementById('intro-video'), begin = document.getElementById('intro-begin'), snd = document.getElementById('intro-sound');
+  function seen() { try { localStorage.setItem(KEY, String(Date.now())); } catch (e) {} }
+  function showBegin() { snd.hidden = true; document.getElementById('intro-skip').hidden = true; begin.hidden = false; requestAnimationFrame(function() { begin.classList.add('on'); }); setTimeout(function() { begin.focus(); }, 300); }
+  function close() { seen(); ov.classList.add('out'); setTimeout(function() { ov.remove(); }, 600); }
+  // try with sound; phones usually block that until a tap, then play muted with a "Geluid aan" chip
+  var p = v.play();
+  if (p && p.catch) p.catch(function() { v.muted = true; snd.hidden = false; v.play().catch(function() { showBegin(); }); });
+  snd.addEventListener('click', function() { v.muted = false; snd.hidden = true; if (v.paused) v.play().catch(function() {}); });
+  v.addEventListener('ended', function() { seen(); showBegin(); });
+  v.addEventListener('error', function() { showBegin(); }); // no video available: go straight to the button
+  begin.addEventListener('click', close);
+  document.getElementById('intro-skip').addEventListener('click', close);
 })();
 </script>
 
