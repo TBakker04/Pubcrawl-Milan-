@@ -3880,7 +3880,7 @@ window.PC_CONFIG = {"id": "milan-2026-814ae6c442", "city": "Milano", "title": "P
 (function() {
   // First open on a phone: play the teaser once, then a "Begin" button opens the game.
   // Stored outside the game prefix, so "Nieuw spel" does not replay it.
-  var KEY = 'pubcrawl-intro-seen';
+  var KEY = 'pubcrawl-intro-seen-v2';
   try { if (localStorage.getItem(KEY)) return; } catch (e) {}
   var ov = document.createElement('div'); ov.id = 'intro'; ov.setAttribute('role', 'dialog'); ov.setAttribute('aria-label', 'Teaser');
   ov.innerHTML = '<video id="intro-video" playsinline webkit-playsinline preload="auto" src="teaser.mp4"></video>'
