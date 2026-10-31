@@ -505,6 +505,40 @@ button:focus-visible { outline: 3px solid var(--paper); outline-offset: 3px; }
 #intro-begin { position: absolute; left: 50%; bottom: max(48px, calc(env(safe-area-inset-bottom) + 32px)); transform: translate(-50%, 30px) scale(.9); opacity: 0; transition: opacity .5s, transform .5s cubic-bezier(.2,1.5,.4,1); font: 400 34px/1 var(--display); letter-spacing: .06em; color: #fff; background: #B5121B; border: 3px solid #F2D16B; border-radius: 999px; padding: 20px 64px; min-height: 64px; cursor: pointer; box-shadow: 0 16px 40px rgba(0,0,0,.45); }
 #intro-begin.on { opacity: 1; transform: translate(-50%, 0) scale(1); }
 #intro button:focus-visible { outline: 3px solid #F2D16B; outline-offset: 3px; }
+#draw { position: fixed; inset: 0; z-index: 290; background: radial-gradient(ellipse at 50% 35%, #134A37 0%, #0E3B2C 50%, #07211A 100%); color: #F7F5F0; overflow-y: auto; opacity: 0; transition: opacity .45s; }
+#draw.on { opacity: 1; }
+#draw[hidden] { display: none; }
+.dr-inner { min-height: 100%; box-sizing: border-box; max-width: 560px; margin: 0 auto; padding: max(18px, env(safe-area-inset-top)) 18px max(24px, env(safe-area-inset-bottom)); display: flex; flex-direction: column; gap: 16px; }
+.dr-top { display: flex; justify-content: space-between; font: 800 11px/1 var(--body); letter-spacing: .18em; text-transform: uppercase; }
+.dr-title { font: 400 clamp(46px, 13vw, 76px)/.88 var(--display); }
+.dr-title span { color: #B5121B; }
+.slot { position: relative; align-self: center; width: min(calc(100% - 48px), 340px); background: linear-gradient(#C8202A, #8A0E15); border: 4px solid #F2D16B; border-radius: 22px 22px 14px 14px; padding: 16px 16px 20px; box-sizing: border-box; box-shadow: 0 20px 50px rgba(0,0,0,.5), inset 0 2px 0 rgba(255,255,255,.25); }
+.slot-lights { display: flex; justify-content: space-between; margin-bottom: 10px; }
+.slot-lights i { width: 10px; height: 10px; border-radius: 50%; background: #F2D16B; box-shadow: 0 0 8px #F2D16B; animation: drBlink 0.9s steps(1) infinite; }
+.slot-lights i:nth-child(2n) { animation-delay: .45s; }
+@keyframes drBlink { 50% { opacity: .25; box-shadow: none; } }
+.slot-head { text-align: center; font: 400 26px/1 var(--display); letter-spacing: .12em; color: #F2D16B; margin-bottom: 12px; }
+.slot-window { position: relative; height: 84px; overflow: hidden; background: #FFFDF8; border: 4px solid #13241C; border-radius: 10px; box-shadow: inset 0 10px 14px rgba(0,0,0,.35), inset 0 -10px 14px rgba(0,0,0,.35); }
+.slot-reel { will-change: transform; }
+.slot-item { height: 84px; display: grid; place-items: center; font: 400 44px/1 var(--display); color: #13241C; text-transform: uppercase; letter-spacing: .02em; }
+.slot-line { position: absolute; left: 0; right: 0; top: 50%; border-top: 2px dashed rgba(181,18,27,.35); pointer-events: none; }
+.slot-lever { position: absolute; right: -21px; top: 46px; width: 10px; height: 92px; background: #B9BCC2; border-radius: 5px; transform-origin: 50% 100%; }
+.slot-lever span { position: absolute; left: 50%; top: -18px; width: 28px; height: 28px; margin-left: -14px; border-radius: 50%; background: #B5121B; border: 3px solid #F2D16B; }
+.slot-lever.pull { animation: drPull .7s ease-in-out; }
+@keyframes drPull { 0%, 100% { transform: rotate(0); } 40% { transform: scaleY(-.6) translateY(-30px); } }
+.dr-teams { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.dr-team { background: rgba(0,0,0,.22); border: 3px solid rgba(247,245,240,.25); border-radius: 14px; padding: 12px; display: flex; flex-direction: column; gap: 8px; transition: border-color .4s, background .4s; }
+.dr-team.done { border-color: #F2D16B; }
+.dr-label { font: 800 12px/1 var(--body); letter-spacing: .16em; text-transform: uppercase; color: #F2D16B; }
+.dr-name { font: 400 clamp(24px, 7vw, 32px)/1 var(--display); text-transform: uppercase; background: rgba(247,245,240,.08); border-radius: 8px; padding: 10px; text-align: center; overflow-wrap: anywhere; }
+.dr-name.pop { background: #F7F5F0; color: #13241C; animation: drPop .5s cubic-bezier(.2,1.6,.4,1); }
+@keyframes drPop { from { transform: scale(.6); } to { transform: scale(1); } }
+.dr-msg { margin: 0; min-height: 1.4em; font: 600 15px/1.4 var(--body); color: #A9BDB4; text-align: center; }
+.dr-go { align-self: center; font: 400 26px/1 var(--display); letter-spacing: .05em; color: #fff; background: #B5121B; border: 3px solid #F2D16B; border-radius: 999px; padding: 16px 44px; min-height: 58px; cursor: pointer; box-shadow: 0 12px 30px rgba(0,0,0,.4); }
+.dr-go:disabled { opacity: .5; cursor: default; }
+.dr-go:focus-visible { outline: 3px solid #F2D16B; outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) { .slot-lights i, .slot-lever.pull, .dr-name.pop { animation: none; } }
+.t-players { margin: 0; font: 600 max(13px, 2.6cqw)/1.4 var(--body); color: #F2D16B; }
 </style>
 <div class="app">
   <div class="stage-wrap">
@@ -538,11 +572,13 @@ button:focus-visible { outline: 3px solid var(--paper); outline-offset: 3px; }
         <span class="q-red">TEAMS</span>
       </div>
       <div class="q-panel">
-        <p class="q-lead">Speel eerst het teamspel. Geef daarna elk team een naam: die namen gebruiken we de rest van de avond in het scorebord, het rad en de roulette.</p>
+        <p class="q-lead">Eerst de loting, dan de namen. De teamnamen gebruiken we de rest van de avond in het scorebord, het rad en de roulette.</p>
+        <p class="t-players" id="t-players"></p>
+        <div class="q-row"><button type="button" class="q-btn" id="t-draw">Naar de loting</button></div>
         <form id="names-form" class="q-form" novalidate>
-          <label for="names-1" class="q-label">Naam team 1</label>
+          <label for="names-1" class="q-label" id="names-l1">Naam team 1</label>
           <div class="q-row"><input id="names-1" type="text" maxlength="20" autocomplete="off" placeholder="Bijv. I Bomber"></div>
-          <label for="names-2" class="q-label">Naam team 2</label>
+          <label for="names-2" class="q-label" id="names-l2">Naam team 2</label>
           <div class="q-row"><input id="names-2" type="text" maxlength="20" autocomplete="off" placeholder="Bijv. Gli Sbagliati"></div>
           <div class="q-row"><button type="submit" class="q-btn">Opslaan</button></div>
           <p class="q-msg" id="names-msg" role="status"></p>
@@ -1482,7 +1518,7 @@ button:focus-visible { outline: 3px solid var(--paper); outline-offset: 3px; }
 })();
 </script>
 <script>
-window.PC_CONFIG = {"id": "milan-2026-814ae6c442", "city": "Milano", "title": "Pubcrawl Milan 2026", "storagePrefix": "pubcrawl-milan-", "dateLabel": "Zaterdag 31 oktober", "date": "2026-10-31", "start": "16:00", "timezone": "Europe/Rome", "startUtc": "2026-10-31T15:00:00Z", "players": ["Luuk", "Yaro", "Gert-Jan", "Thobias"], "defaultTeams": {"Luuk": "1", "Yaro": "1", "Gert-Jan": "2", "Thobias": "2"}, "casinoEveryMinutes": 45, "photoBomb": {"offsetMinutes": 22, "chance": 0.7}, "holes": [{"n": 1, "name": "N'Ombra de Vin", "address": "Via San Marco 2", "area": "Brera", "time": "16:00", "lat": 45.4735125, "lng": 9.1880344, "drink": {"type": "cocktail", "name": "Hugo", "note": "Prosecco met vlierbloesem, munt en spuitwater. Fris en licht: een goede start."}}, {"n": 2, "name": "Bar Jamaica", "address": "Via Brera 32", "area": "Brera", "time": "16:22", "lat": 45.4726115, "lng": 9.187593, "drink": {"type": "bier", "name": "Birra Moretti", "note": "Klein flesje of piccola van de tap. Brera-klassieker sinds 1911."}}, {"n": 3, "name": "Montmartre Caffè 1952", "address": "Via Fiori Chiari 26", "area": "Brera", "time": "16:45", "lat": 45.4720043, "lng": 9.1854273, "special": "QUIZ-HOLE", "drink": {"type": "spritz", "name": "Aperol Spritz", "note": "Vraag naar de €5-prijs en neem Aperol, niet Campari: dat kost hier ineens €12."}}, {"n": 4, "name": "Bar Dolly", "address": "Piazza Santa Maria Beltrade 10", "area": "Duomo", "time": "17:27", "lat": 45.4630824, "lng": 9.1864809, "addressShort": "P.za S. Maria Beltrade 10", "note": "closes 21:00", "drink": {"type": "wijn", "name": "Sauvignon Blanc van het huis", "note": "Dolly is de goedkoopste bar van het centrum. Let op: sluit om 21:00."}}, {"n": 5, "name": "SunEleven Rooftop", "address": "Piazza Cesare Beccaria", "area": "Duomo", "time": "17:57", "lat": 45.464588, "lng": 9.1954229, "transitAfter": {"line": "M1", "label": "Metro", "note": "M1 San Babila → Porta Venezia"}, "drink": {"type": "wijn", "name": "Prosecco", "note": "Proost op het dak met uitzicht op de Duomo. Cocktails duren hier lang, prosecco niet."}}, {"n": 6, "name": "LOLA", "address": "Via Alessandro Tadino 6", "area": "Porta Venezia", "time": "18:30", "lat": 45.4762887, "lng": 9.2052267, "drink": {"type": "bier", "name": "Peroni Nastro Azzurro", "note": "Klein biertje. Zin in iets anders? De Lola Paloma is hun specialiteit."}}, {"n": 7, "name": "Birra di Quartiere", "address": "Via Felice Casati 24", "area": "Porta Venezia", "time": "18:56", "lat": 45.4792233, "lng": 9.2027481, "special": "BLIND HOLE", "drink": {"type": "regel", "name": "Blind: het andere team kiest", "note": "Uit de tapbieren van de brouwerij, max €10. Weigeren = +3."}}, {"n": 8, "name": "Bar Picchio", "address": "Via Melzo 11", "area": "Porta Venezia", "time": "19:33", "lat": 45.4735532, "lng": 9.2092225, "drink": {"type": "bier", "name": "Pint van de tap", "note": "De goedkoopste pint van de route, rond €3,50."}}, {"n": 9, "name": "Bar Basso", "address": "Via Plinio 39", "area": "Porta Venezia", "time": "20:01", "lat": 45.476784, "lng": 9.217543, "special": "HOLE SBAGLIATO", "drink": {"type": "regel", "name": "Negroni Sbagliato", "note": "Hier uitgevonden. Raad als eerste team de drie ingrediënten: −1."}}, {"n": 10, "name": "Maremoto Brewing", "address": "Via Castel Morrone 1/A", "area": "Porta Venezia", "time": "20:40", "lat": 45.4685082, "lng": 9.2144441, "drink": {"type": "bier", "name": "Hazy IPA van Maremoto", "note": "Hun eigen brouwsel van de tap. Vraag om een proefslokje als je twijfelt."}}, {"n": 11, "name": "Nottingham Forest", "address": "Viale Piave 1", "area": "Porta Venezia", "time": "21:08", "lat": 45.468748, "lng": 9.206738, "transitAfter": {"line": "T9", "label": "Tram 9", "note": "tram 9 → Porta Romana"}, "drink": {"type": "cocktail", "name": "Americano", "note": "Campari, rode vermout en spuitwater: de lichtste klassieker, en ook uit Milaan."}}, {"n": 12, "name": "Mom Cafè", "address": "Viale Monte Nero 51", "area": "Porta Romana", "time": "21:45", "lat": 45.4587986, "lng": 9.2060954, "drink": {"type": "bier", "name": "Menabrea", "note": "Blond bier uit Piemonte. De hapjes zijn gratis, dus eet mee."}}, {"n": 13, "name": "Il Sole", "address": "Viale Monte Nero 28", "area": "Porta Romana", "time": "22:07", "lat": 45.4553942, "lng": 9.2046074, "drink": {"type": "spritz", "name": "Campari Spritz", "note": "Het bittere broertje van de Aperol. Il Sole staat bekend om zijn spritz."}}, {"n": 14, "name": "Vino", "address": "Via Pier Lombardo 9", "area": "Porta Romana", "time": "22:27", "lat": 45.4545468, "lng": 9.2059299, "note": "closes 00:00", "drink": {"type": "wijn", "name": "Lugana", "note": "Witte wijn van het Gardameer. Of laat de eigenaar iets kiezen onder de €7."}}, {"n": 15, "name": "Madeira", "address": "Viale Monte Nero 3", "area": "Porta Romana", "time": "22:50", "lat": 45.453072, "lng": 9.2029461, "drink": {"type": "bier", "name": "Birra Poretti", "note": "Pak het aperitivo-deal: drankje met een bord hapjes, ongeveer €10. Sla de cocktails hier over."}}, {"n": 16, "name": "Pogue Mahone's", "address": "Via Vittorio Salmini 1", "area": "Porta Romana", "time": "23:12", "lat": 45.4507026, "lng": 9.2038774, "special": "SHOT-ROULETTE", "transitAfter": {"line": "T9", "label": "Tram 9", "note": "tram 9 → Piazza XXIV Maggio"}, "drink": {"type": "regel", "name": "Shot wodka + shot water", "note": "Shot-roulette: per team één shot wodka en één shot water. Het andere team husselt, twee spelers drinken met een pokerface. Fout geraden = −2 voor de bluffers."}}, {"n": 17, "name": "Mag Café", "address": "Ripa di Porta Ticinese 43", "area": "Navigli", "time": "00:00", "lat": 45.4512784, "lng": 9.1734365, "special": "HOLE VAN DE DUIVEL", "drink": {"type": "regel", "name": "Het loeizware drankje", "note": "Hole van de Duivel: één zware cocktail, de barman kiest. Teams bieden in slokken."}}, {"n": 18, "name": "Zog", "address": "Ripa di Porta Ticinese 37", "area": "Navigli", "time": "00:26", "lat": 45.4514432, "lng": 9.1740141, "drink": {"type": "bier", "name": "Ichnusa Non Filtrata", "note": "Ongefilterd Sardijns bier om mee af te sluiten aan het water. Proost op de winnaar."}}], "endUtc": "2026-11-01T01:00:00Z"};
+window.PC_CONFIG = {"id": "milan-2026-814ae6c442", "city": "Milano", "title": "Pubcrawl Milan 2026", "storagePrefix": "pubcrawl-milan-", "dateLabel": "Zaterdag 31 oktober", "date": "2026-10-31", "start": "16:00", "timezone": "Europe/Rome", "startUtc": "2026-10-31T15:00:00Z", "players": ["Luuk", "Yaro", "Gert-Jan", "Thobias"], "defaultTeams": {"Luuk": "1", "Gert-Jan": "1", "Yaro": "2", "Thobias": "2"}, "casinoEveryMinutes": 45, "photoBomb": {"offsetMinutes": 22, "chance": 0.7}, "holes": [{"n": 1, "name": "N'Ombra de Vin", "address": "Via San Marco 2", "area": "Brera", "time": "16:00", "lat": 45.4735125, "lng": 9.1880344, "drink": {"type": "cocktail", "name": "Hugo", "note": "Prosecco met vlierbloesem, munt en spuitwater. Fris en licht: een goede start."}}, {"n": 2, "name": "Bar Jamaica", "address": "Via Brera 32", "area": "Brera", "time": "16:22", "lat": 45.4726115, "lng": 9.187593, "drink": {"type": "bier", "name": "Birra Moretti", "note": "Klein flesje of piccola van de tap. Brera-klassieker sinds 1911."}}, {"n": 3, "name": "Montmartre Caffè 1952", "address": "Via Fiori Chiari 26", "area": "Brera", "time": "16:45", "lat": 45.4720043, "lng": 9.1854273, "special": "QUIZ-HOLE", "drink": {"type": "spritz", "name": "Aperol Spritz", "note": "Vraag naar de €5-prijs en neem Aperol, niet Campari: dat kost hier ineens €12."}}, {"n": 4, "name": "Bar Dolly", "address": "Piazza Santa Maria Beltrade 10", "area": "Duomo", "time": "17:27", "lat": 45.4630824, "lng": 9.1864809, "addressShort": "P.za S. Maria Beltrade 10", "note": "closes 21:00", "drink": {"type": "wijn", "name": "Sauvignon Blanc van het huis", "note": "Dolly is de goedkoopste bar van het centrum. Let op: sluit om 21:00."}}, {"n": 5, "name": "SunEleven Rooftop", "address": "Piazza Cesare Beccaria", "area": "Duomo", "time": "17:57", "lat": 45.464588, "lng": 9.1954229, "transitAfter": {"line": "M1", "label": "Metro", "note": "M1 San Babila → Porta Venezia"}, "drink": {"type": "wijn", "name": "Prosecco", "note": "Proost op het dak met uitzicht op de Duomo. Cocktails duren hier lang, prosecco niet."}}, {"n": 6, "name": "LOLA", "address": "Via Alessandro Tadino 6", "area": "Porta Venezia", "time": "18:30", "lat": 45.4762887, "lng": 9.2052267, "drink": {"type": "bier", "name": "Peroni Nastro Azzurro", "note": "Klein biertje. Zin in iets anders? De Lola Paloma is hun specialiteit."}}, {"n": 7, "name": "Birra di Quartiere", "address": "Via Felice Casati 24", "area": "Porta Venezia", "time": "18:56", "lat": 45.4792233, "lng": 9.2027481, "special": "BLIND HOLE", "drink": {"type": "regel", "name": "Blind: het andere team kiest", "note": "Uit de tapbieren van de brouwerij, max €10. Weigeren = +3."}}, {"n": 8, "name": "Bar Picchio", "address": "Via Melzo 11", "area": "Porta Venezia", "time": "19:33", "lat": 45.4735532, "lng": 9.2092225, "drink": {"type": "bier", "name": "Pint van de tap", "note": "De goedkoopste pint van de route, rond €3,50."}}, {"n": 9, "name": "Bar Basso", "address": "Via Plinio 39", "area": "Porta Venezia", "time": "20:01", "lat": 45.476784, "lng": 9.217543, "special": "HOLE SBAGLIATO", "drink": {"type": "regel", "name": "Negroni Sbagliato", "note": "Hier uitgevonden. Raad als eerste team de drie ingrediënten: −1."}}, {"n": 10, "name": "Maremoto Brewing", "address": "Via Castel Morrone 1/A", "area": "Porta Venezia", "time": "20:40", "lat": 45.4685082, "lng": 9.2144441, "drink": {"type": "bier", "name": "Hazy IPA van Maremoto", "note": "Hun eigen brouwsel van de tap. Vraag om een proefslokje als je twijfelt."}}, {"n": 11, "name": "Nottingham Forest", "address": "Viale Piave 1", "area": "Porta Venezia", "time": "21:08", "lat": 45.468748, "lng": 9.206738, "transitAfter": {"line": "T9", "label": "Tram 9", "note": "tram 9 → Porta Romana"}, "drink": {"type": "cocktail", "name": "Americano", "note": "Campari, rode vermout en spuitwater: de lichtste klassieker, en ook uit Milaan."}}, {"n": 12, "name": "Mom Cafè", "address": "Viale Monte Nero 51", "area": "Porta Romana", "time": "21:45", "lat": 45.4587986, "lng": 9.2060954, "drink": {"type": "bier", "name": "Menabrea", "note": "Blond bier uit Piemonte. De hapjes zijn gratis, dus eet mee."}}, {"n": 13, "name": "Il Sole", "address": "Viale Monte Nero 28", "area": "Porta Romana", "time": "22:07", "lat": 45.4553942, "lng": 9.2046074, "drink": {"type": "spritz", "name": "Campari Spritz", "note": "Het bittere broertje van de Aperol. Il Sole staat bekend om zijn spritz."}}, {"n": 14, "name": "Vino", "address": "Via Pier Lombardo 9", "area": "Porta Romana", "time": "22:27", "lat": 45.4545468, "lng": 9.2059299, "note": "closes 00:00", "drink": {"type": "wijn", "name": "Lugana", "note": "Witte wijn van het Gardameer. Of laat de eigenaar iets kiezen onder de €7."}}, {"n": 15, "name": "Madeira", "address": "Viale Monte Nero 3", "area": "Porta Romana", "time": "22:50", "lat": 45.453072, "lng": 9.2029461, "drink": {"type": "bier", "name": "Birra Poretti", "note": "Pak het aperitivo-deal: drankje met een bord hapjes, ongeveer €10. Sla de cocktails hier over."}}, {"n": 16, "name": "Pogue Mahone's", "address": "Via Vittorio Salmini 1", "area": "Porta Romana", "time": "23:12", "lat": 45.4507026, "lng": 9.2038774, "special": "SHOT-ROULETTE", "transitAfter": {"line": "T9", "label": "Tram 9", "note": "tram 9 → Piazza XXIV Maggio"}, "drink": {"type": "regel", "name": "Shot wodka + shot water", "note": "Shot-roulette: per team één shot wodka en één shot water. Het andere team husselt, twee spelers drinken met een pokerface. Fout geraden = −2 voor de bluffers."}}, {"n": 17, "name": "Mag Café", "address": "Ripa di Porta Ticinese 43", "area": "Navigli", "time": "00:00", "lat": 45.4512784, "lng": 9.1734365, "special": "HOLE VAN DE DUIVEL", "drink": {"type": "regel", "name": "Het loeizware drankje", "note": "Hole van de Duivel: één zware cocktail, de barman kiest. Teams bieden in slokken."}}, {"n": 18, "name": "Zog", "address": "Ripa di Porta Ticinese 37", "area": "Navigli", "time": "00:26", "lat": 45.4514432, "lng": 9.1740141, "drink": {"type": "bier", "name": "Ichnusa Non Filtrata", "note": "Ongefilterd Sardijns bier om mee af te sluiten aan het water. Proost op de winnaar."}}], "endUtc": "2026-11-01T01:00:00Z", "notTogether": [["Gert-Jan", "Thobias"]]};
 </script>
 <script>
 (function() {
@@ -1690,6 +1726,26 @@ window.PC_CONFIG = {"id": "milan-2026-814ae6c442", "city": "Milano", "title": "P
     msg.textContent = 'Opgeslagen: ' + n['1'] + ' tegen ' + n['2'] + '. Veel succes!';
   });
   fill();
+  // who is in which team, from the slot-machine draw
+  function players() {
+    var o = window.PCTeamDraw && window.PCTeamDraw.order();
+    var el = document.getElementById('t-players'), btn = document.getElementById('t-draw');
+    if (o) {
+      el.textContent = 'Team 1: ' + o[0] + ' & ' + o[1] + '  \u00b7  Team 2: ' + o[2] + ' & ' + o[3];
+      document.getElementById('names-l1').textContent = 'Naam team 1 (' + o[0] + ' & ' + o[1] + ')';
+      document.getElementById('names-l2').textContent = 'Naam team 2 (' + o[2] + ' & ' + o[3] + ')';
+      btn.textContent = 'Loting opnieuw bekijken';
+    } else {
+      el.textContent = 'De teams zijn nog niet geloot.';
+      document.getElementById('names-l1').textContent = 'Naam team 1';
+      document.getElementById('names-l2').textContent = 'Naam team 2';
+      btn.textContent = 'Naar de loting';
+    }
+  }
+  document.getElementById('t-draw').addEventListener('click', function() { if (window.PCDraw) window.PCDraw.open(); });
+  document.addEventListener('pc-kv', function(e) { if (e.detail === 'teamdraw') players(); });
+  document.addEventListener('pc-reset', players);
+  setTimeout(players, 0);
   document.addEventListener('pc-teamnames', function() { if (document.activeElement !== i1 && document.activeElement !== i2) fill(); });
 })();
 </script>
@@ -2907,6 +2963,7 @@ window.PC_CONFIG = {"id": "milan-2026-814ae6c442", "city": "Milano", "title": "P
 
   function busy() {
     if (window.PCIntroOpen && window.PCIntroOpen()) return true;
+    if (window.PCDrawOpen && window.PCDrawOpen()) return true;
     if (!ov.hidden || document.hidden) return true;
     var a = document.activeElement;
     if (a && /^(INPUT|SELECT|TEXTAREA)$/.test(a.tagName)) return true;
@@ -3453,6 +3510,7 @@ window.PC_CONFIG = {"id": "milan-2026-814ae6c442", "city": "Milano", "title": "P
 
   function busy() {
     if (window.PCIntroOpen && window.PCIntroOpen()) return true;
+    if (window.PCDrawOpen && window.PCDrawOpen()) return true;
     if (!ov.hidden || document.hidden) return true;
     if (window.PCAlarmOpen && window.PCAlarmOpen()) return true;
     var a = document.activeElement; if (a && /^(INPUT|SELECT|TEXTAREA)$/.test(a.tagName)) return true;
@@ -3878,15 +3936,157 @@ window.PC_CONFIG = {"id": "milan-2026-814ae6c442", "city": "Milano", "title": "P
 </script>
 <script>
 (function() {
+  // The team draw: a slot machine picks two names for team 1, then two for team 2.
+  // The result is shared (kv "teamdraw"), so every phone that opens the draw lands on the same teams.
+  var CFG = window.PC_CONFIG, S = window.PCStore;
+  var PLAYERS = CFG.players.slice();
+  var APART = CFG.notTogether || [];
+  function valid(order) { // order = [t1a, t1b, t2a, t2b]
+    var t1 = order.slice(0, 2), t2 = order.slice(2);
+    return !APART.some(function(pair) { return [t1, t2].some(function(t) { return t.indexOf(pair[0]) >= 0 && t.indexOf(pair[1]) >= 0; }); });
+  }
+  function freshOrder() {
+    for (var tries = 0; tries < 200; tries++) {
+      var a = PLAYERS.slice();
+      for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; }
+      if (valid(a)) return a;
+    }
+    return PLAYERS.slice();
+  }
+  function stored() { var d = S.kv.get('teamdraw', null); return d && Array.isArray(d.order) && d.order.length === 4 ? d.order : null; }
+  window.PCTeamDraw = { order: stored };
+
+  // ---------- markup ----------
+  var ov = document.createElement('div'); ov.id = 'draw'; ov.hidden = true; ov.setAttribute('role', 'dialog'); ov.setAttribute('aria-label', 'Teams loten');
+  var lights = ''; for (var k = 0; k < 14; k++) lights += '<i></i>';
+  ov.innerHTML = '<div class="dr-inner">'
+    + '<div class="dr-top"><span>Pubcrawl Milan</span><span>De loting</span></div>'
+    + '<div class="dr-title">WIE SPEELT<br><span>MET WIE?</span></div>'
+    + '<div class="slot"><div class="slot-lights">' + lights + '</div>'
+    + '<div class="slot-head">CASINÒ MILANO</div>'
+    + '<div class="slot-window"><div class="slot-reel" id="dr-reel"></div><div class="slot-line"></div></div>'
+    + '<div class="slot-lever" id="dr-lever"><span></span></div></div>'
+    + '<div class="dr-teams">'
+    + '<div class="dr-team" id="dr-t1"><span class="dr-label">Team 1</span><span class="dr-name" id="dr-n0">?</span><span class="dr-name" id="dr-n1">?</span></div>'
+    + '<div class="dr-team" id="dr-t2"><span class="dr-label">Team 2</span><span class="dr-name" id="dr-n2">?</span><span class="dr-name" id="dr-n3">?</span></div>'
+    + '</div>'
+    + '<p class="dr-msg" id="dr-msg" role="status"></p>'
+    + '<button type="button" class="dr-go" id="dr-go">Trek team 1</button>'
+    + '</div>';
+  document.body.appendChild(ov);
+  function $(id) { return document.getElementById(id); }
+  window.PCDrawOpen = function() { return !ov.hidden; };
+
+  // ---------- sound ----------
+  var ac = null;
+  function ctx() { try { ac = ac || new (window.AudioContext || window.webkitAudioContext)(); if (ac.state === 'suspended') ac.resume(); } catch (e) {} return ac; }
+  function tone(f, len, type, g) {
+    var c = ctx(); if (!c) return;
+    try {
+      var o = c.createOscillator(), v = c.createGain(); o.type = type || 'square'; o.frequency.value = f;
+      v.gain.setValueAtTime(0.0001, c.currentTime); v.gain.exponentialRampToValueAtTime(g || 0.08, c.currentTime + 0.005); v.gain.exponentialRampToValueAtTime(0.0001, c.currentTime + len);
+      o.connect(v); v.connect(c.destination); o.start(); o.stop(c.currentTime + len + 0.02);
+    } catch (e) {}
+  }
+  function tick() { tone(1400, 0.03, 'square', 0.05); }
+  function ding() { [988, 1319, 1976].forEach(function(f, i) { setTimeout(function() { tone(f, 0.35, 'triangle', 0.12); }, i * 90); }); try { if (navigator.vibrate) navigator.vibrate(60); } catch (e) {} }
+  function fanfare() { [784, 988, 1175, 1568].forEach(function(f, i) { setTimeout(function() { tone(f, 0.5, 'triangle', 0.13); }, i * 140); }); }
+
+  // ---------- reel ----------
+  var ITEM = 0, reel = $('dr-reel'), pos = 0;
+  function itemH() { return reel.parentNode.clientHeight; }
+  function fillReel(names, target) {
+    // a long strip of the remaining names, ending on the target, positioned so the spin starts at the top
+    var strip = [], rounds = 9;
+    for (var r = 0; r < rounds; r++) names.forEach(function(n) { strip.push(n); });
+    strip.push(target);
+    reel.innerHTML = strip.map(function(n) { return '<div class="slot-item">' + n + '</div>'; }).join('');
+    return strip.length - 1;
+  }
+  function spin(names, target) {
+    return new Promise(function(res) {
+      var last = fillReel(names, target), h = itemH(), end = last * h;
+      var dur = 2600 + Math.random() * 500, t0 = null, lastIdx = -1;
+      var lever = $('dr-lever'); lever.classList.remove('pull'); void lever.offsetWidth; lever.classList.add('pull');
+      function frame(now) {
+        if (t0 === null) t0 = now;
+        var u = Math.min(1, (now - t0) / dur);
+        var e = 1 - Math.pow(1 - u, 4);              // fast start, slow landing
+        var y = e * end + Math.sin(u * Math.PI) * 0;
+        if (u > 0.94) y = end + Math.sin((u - 0.94) / 0.06 * Math.PI) * h * 0.08; // small bounce on the stop
+        reel.style.transform = 'translateY(' + (-y) + 'px)';
+        var idx = Math.round(y / h); if (idx !== lastIdx) { lastIdx = idx; if (u < 0.97) tick(); }
+        if (u < 1) requestAnimationFrame(frame);
+        else { reel.style.transform = 'translateY(' + (-end) + 'px)'; ding(); res(); }
+      }
+      requestAnimationFrame(frame);
+    });
+  }
+  function wait(ms) { return new Promise(function(r) { setTimeout(r, ms); }); }
+
+  // ---------- flow ----------
+  var order = null, step = 0, busy = false; // step 0 = nothing drawn, 2 = team 1 done, 4 = all done
+  function reveal(i) { var el = $('dr-n' + i); el.textContent = order[i]; el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); }
+  function setButton() {
+    var b = $('dr-go');
+    b.textContent = step === 0 ? 'Trek team 1' : step === 2 ? 'Trek team 2' : 'Naar het spel';
+    b.disabled = busy;
+  }
+  async function drawTeam(first) {
+    busy = true; setButton();
+    for (var k = first; k < first + 2; k++) {
+      var left = PLAYERS.filter(function(p) { return order.slice(0, k).indexOf(p) < 0; }); // names still in the machine
+      $('dr-msg').textContent = k % 2 === 0 ? 'Team ' + (first / 2 + 1) + ', eerste speler…' : 'En zijn teamgenoot…';
+      await spin(left, order[k]);
+      reveal(k);
+      await wait(k % 2 === 0 ? 900 : 400);
+    }
+    step = first + 2; busy = false;
+    if (step === 2) $('dr-msg').textContent = order[0] + ' en ' + order[1] + ' vormen team 1.';
+    else { $('dr-msg').textContent = order[2] + ' en ' + order[3] + ' vormen team 2. Salute!'; $('dr-t1').classList.add('done'); $('dr-t2').classList.add('done'); fanfare(); }
+    setButton();
+  }
+  function save() {
+    S.kv.set('teamdraw', { order: order, at: Date.now() });
+    var t = {}; order.forEach(function(p, i) { t[p] = i < 2 ? '1' : '2'; }); S.kv.set('teams', t);
+  }
+  $('dr-go').addEventListener('click', function() {
+    if (busy) return;
+    ctx();
+    if (step === 0) {
+      order = stored() || freshOrder(); // another phone may already have drawn: then we land on the same teams
+      if (!stored()) save();
+      drawTeam(0);
+    } else if (step === 2) drawTeam(2);
+    else close();
+  });
+  function reset() {
+    order = null; step = 0; busy = false;
+    [0, 1, 2, 3].forEach(function(i) { $('dr-n' + i).textContent = '?'; $('dr-n' + i).classList.remove('pop'); });
+    $('dr-t1').classList.remove('done'); $('dr-t2').classList.remove('done');
+    reel.innerHTML = '<div class="slot-item">?</div>'; reel.style.transform = 'none';
+    $('dr-msg').textContent = stored() ? 'De teams zijn al geloot. Trek ze en kijk mee.' : (APART.length ? APART[0][0] + ' en ' + APART[0][1] + ' kunnen niet samen in een team.' : 'Trek de teams.');
+    setButton();
+  }
+  function open() { reset(); ov.hidden = false; requestAnimationFrame(function() { ov.classList.add('on'); }); }
+  function close() {
+    ov.classList.remove('on'); setTimeout(function() { ov.hidden = true; }, 450);
+    if (window.PCGo) window.PCGo('teams');
+  }
+  window.PCDraw = { open: open };
+})();
+</script>
+<script>
+(function() {
   // First open on a phone: play the teaser once, then a "Begin" button opens the game.
   // Stored outside the game prefix, so "Nieuw spel" does not replay it.
-  var KEY = 'pubcrawl-intro-seen-v2';
+  var KEY = 'pubcrawl-intro-seen-v3';
   try { if (localStorage.getItem(KEY)) return; } catch (e) {}
   var ov = document.createElement('div'); ov.id = 'intro'; ov.setAttribute('role', 'dialog'); ov.setAttribute('aria-label', 'Teaser');
   ov.innerHTML = '<video id="intro-video" playsinline webkit-playsinline preload="auto" src="teaser.mp4"></video>'
     + '<button type="button" id="intro-sound" class="intro-chip" hidden>Geluid aan</button>'
     + '<button type="button" id="intro-skip" class="intro-chip">Overslaan</button>'
-    + '<button type="button" id="intro-begin" hidden>Begin</button>';
+    + '<button type="button" id="intro-begin" hidden>Kies teams</button>';
   document.body.appendChild(ov);
   window.PCIntroOpen = function() { return !!document.getElementById('intro'); };
   var v = document.getElementById('intro-video'), begin = document.getElementById('intro-begin'), snd = document.getElementById('intro-sound');
@@ -3899,8 +4099,8 @@ window.PC_CONFIG = {"id": "milan-2026-814ae6c442", "city": "Milano", "title": "P
   snd.addEventListener('click', function() { v.muted = false; snd.hidden = true; if (v.paused) v.play().catch(function() {}); });
   v.addEventListener('ended', function() { seen(); showBegin(); });
   v.addEventListener('error', function() { showBegin(); }); // no video available: go straight to the button
-  begin.addEventListener('click', close);
-  document.getElementById('intro-skip').addEventListener('click', close);
+  begin.addEventListener('click', function() { close(); if (window.PCDraw) window.PCDraw.open(); });
+  document.getElementById('intro-skip').addEventListener('click', function() { close(); if (window.PCDraw) window.PCDraw.open(); });
 })();
 </script>
 
