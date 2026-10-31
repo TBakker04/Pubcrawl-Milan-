@@ -539,6 +539,8 @@ button:focus-visible { outline: 3px solid var(--paper); outline-offset: 3px; }
 .dr-go:focus-visible { outline: 3px solid #F2D16B; outline-offset: 3px; }
 @media (prefers-reduced-motion: reduce) { .slot-lights i, .slot-lever.pull, .dr-name.pop { animation: none; } }
 .t-players { margin: 0; font: 600 max(13px, 2.6cqw)/1.4 var(--body); color: #F2D16B; }
+.dr-skip { align-self: center; background: none; border: 0; color: #A9BDB4; font: 600 14px/1.3 var(--body); text-decoration: underline; min-height: 44px; cursor: pointer; }
+.dr-skip[hidden] { display: none; }
 </style>
 <div class="app">
   <div class="stage-wrap">
@@ -3972,6 +3974,7 @@ window.PC_CONFIG = {"id": "milan-2026-814ae6c442", "city": "Milano", "title": "P
     + '</div>'
     + '<p class="dr-msg" id="dr-msg" role="status"></p>'
     + '<button type="button" class="dr-go" id="dr-go">Trek team 1</button>'
+    + '<button type="button" class="dr-skip" id="dr-skip" hidden>Teams staan al vast \u00b7 direct naar het spel</button>'
     + '</div>';
   document.body.appendChild(ov);
   function $(id) { return document.getElementById(id); }
@@ -4068,7 +4071,8 @@ window.PC_CONFIG = {"id": "milan-2026-814ae6c442", "city": "Milano", "title": "P
     $('dr-msg').textContent = stored() ? 'De teams zijn al geloot. Trek ze en kijk mee.' : (APART.length ? APART[0][0] + ' en ' + APART[0][1] + ' kunnen niet samen in een team.' : 'Trek de teams.');
     setButton();
   }
-  function open() { reset(); ov.hidden = false; requestAnimationFrame(function() { ov.classList.add('on'); }); }
+  $('dr-skip').addEventListener('click', function() { if (!busy) close(); });
+  function open() { reset(); $('dr-skip').hidden = !stored(); ov.hidden = false; requestAnimationFrame(function() { ov.classList.add('on'); }); }
   function close() {
     ov.classList.remove('on'); setTimeout(function() { ov.hidden = true; }, 450);
     if (window.PCGo) window.PCGo('teams');
