@@ -31,7 +31,12 @@
   var q = /[?&]code=([^&#]*)/.exec(location.search), CODE = q ? decodeURIComponent(q[1]).replace(/[^A-Za-z0-9-]/g, '').toUpperCase() : '';
   var GAME = 'games/' + CODE;
   var list = document.getElementById('list'), sum = document.getElementById('sum');
-  if (!CODE) { sum.textContent = 'Open deze pagina met ?code= en een geldige spelcode.'; sum.className = 'bad'; return; }
+  if (!CODE) {
+    // no code in the link: ask for one
+    sum.className = 'wait'; sum.innerHTML = '<form id="cf" style="display:flex;gap:8px;flex-wrap:wrap;font-size:16px;font-weight:600"><input id="cc" placeholder="Spelcode, bijv. MIL-K7PQ-M2XD" style="flex:1 1 220px;font:600 18px/1.2 system-ui;padding:12px;border-radius:10px;border:0;text-transform:uppercase" autocapitalize="characters"><button style="font:800 16px system-ui;padding:12px 20px;border-radius:999px;border:0;background:#F2D16B;color:#13241C">Check starten</button></form><small style="margin-top:8px">Een actieve spelcode staat op de beheerpagina (admin.html) bij "Alle spelcodes".</small>';
+    document.getElementById('cf').addEventListener('submit', function(e) { e.preventDefault(); var v = document.getElementById('cc').value.trim(); if (v) location.search = '?code=' + encodeURIComponent(v); });
+    return;
+  }
   if (!window.PC_FIREBASE) { sum.textContent = 'Geen Firebase-config gevonden.'; sum.className = 'bad'; return; }
   firebase.initializeApp(window.PC_FIREBASE);
   if (window.PC_FIREBASE.appCheckKey && firebase.appCheck) { try { firebase.appCheck().activate(window.PC_FIREBASE.appCheckKey, true); } catch (e) {} }
