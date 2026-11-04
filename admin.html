@@ -132,7 +132,7 @@
         var tr = document.createElement('tr'); if (!live) tr.className = 'off';
         tr.innerHTML = '<td class="code">' + esc(g.code) + '<br><span class="tag' + (live ? '' : ' no') + '">' + (live ? 'actief' : (g.active ? 'verlopen' : 'uit')) + '</span></td>'
           + '<td>' + esc(g.label || '') + '<br><span class="tag">' + esc(CITYNAME[g.city || 'milan'] || g.city) + '</span></td><td>' + (g.players || '–') + '</td><td>' + (g.playDate ? day(g.playDate) : day(g.expires)) + '</td>'
-          + '<td><div class="row"><button class="alt" data-a="copy">Link</button><button class="alt" data-a="toggle">' + (g.active ? 'Zet uit' : 'Zet aan') + '</button><button class="alt" data-a="del">Wissen</button></div></td>';
+          + '<td><div class="row"><button class="alt" data-a="copy">Link</button><button class="alt" data-a="check">Check</button><button class="alt" data-a="toggle">' + (g.active ? 'Zet uit' : 'Zet aan') + '</button><button class="alt" data-a="del">Wissen</button></div></td>';
         tr.addEventListener('click', function(e) { var b = e.target.closest('button'); if (b) act(b, g); });
         $('rows').appendChild(tr);
       });
@@ -144,6 +144,7 @@
   }
   async function act(b, g) {
     if (b.dataset.a === 'copy') { copy(link(g.code, g.city || 'milan'), b); return; }
+    if (b.dataset.a === 'check') { window.open('check.html?code=' + encodeURIComponent(g.code), '_blank'); return; }
     if (b.dataset.a === 'toggle') { await db.doc('games/' + g.code).update({ active: !g.active }); load(); return; }
     if (b.dataset.a === 'del') {
       if (b.dataset.sure !== '1') { b.dataset.sure = '1'; b.textContent = 'Zeker?'; return; }
