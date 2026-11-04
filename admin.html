@@ -46,7 +46,7 @@
   <div class="card" id="maker" hidden>
     <h2>Nieuwe spelcode</h2>
     <div class="grid">
-      <label>Stad<select id="city"><option value="milan">Milaan</option><option value="amsterdam">Amsterdam</option></select></label>
+      <label>Stad<select id="city"></select></label>
       <label>Voor wie (naam, e-mail of telefoon)<input id="label" type="text" maxlength="120" placeholder="Bijv. Lisa · lisa@mail.com"></label>
       <label>Aantal spelers<select id="players"></select></label>
       <label>Speeldatum<input id="playdate" type="date"></label>
@@ -82,16 +82,20 @@
   </div>
 </main>
 <script src="firebase-config.js"></script>
+<script src="cities.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-check-compat.js"></script>
 <script>
 (function() {
-  var PREFIX = { milan: 'MIL', amsterdam: 'AMS' }, ABC = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
+  // the cities come from cities.js (cities.json in the source, written by build.py)
+  var CL = window.PC_CITIES || {}, PREFIX = {}, ABC = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
+  Object.keys(CL).forEach(function(k) { PREFIX[k] = CL[k].prefix; });
   var SITE = location.origin + location.pathname.replace(/admin\.html$/, '');
   // every city has its own site; this page lives on the Milan one
-  var SITES = { milan: SITE, amsterdam: 'https://tbakker04.github.io/Pubcrawl-Amsterdam/' }, CITYNAME = { milan: 'Milaan', amsterdam: 'Amsterdam' };
+  var SITES = {}, CITYNAME = {};
+  Object.keys(CL).forEach(function(k) { SITES[k] = CL[k].site; CITYNAME[k] = CL[k].nameNl; var o = document.createElement('option'); o.value = k; o.textContent = CL[k].nameNl; $('city').appendChild(o); });
   function site(city) { return SITES[city] || SITE; }
   function $(id) { return document.getElementById(id); }
   function link(code, city) { return site(city) + '?code=' + encodeURIComponent(code); }

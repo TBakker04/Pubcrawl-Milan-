@@ -1292,6 +1292,9 @@ body.narrow .mob-poster { overflow-y: auto; overscroll-behavior: contain; -webki
   fit(); render();
 })();
 </script>
+<script>
+window.PC_CITIES = {"milan": {"brand": "Pubcrawl Milan", "nameNl": "Milaan", "prefix": "MIL", "site": "https://tbakker04.github.io/Pubcrawl-Milan-/"}, "amsterdam": {"brand": "Pubcrawl Amsterdam", "nameNl": "Amsterdam", "prefix": "AMS", "site": "https://tbakker04.github.io/Pubcrawl-Amsterdam/"}};
+</script>
 <script src="firebase-config.js"></script>
 <script>
 (function() {
@@ -1501,8 +1504,9 @@ window.PC_EN = {"Verbinden…": "Connecting…", "Live: scores op alle telefoons
   // every city has its own site; they share one web origin, so remembered codes are kept per city
   var CITY = CFG.cityKey || 'milan', MILAN = CITY === 'milan';
   var KEY = MILAN ? 'pubcrawl-code' : 'pubcrawl-code-' + CITY;
-  var SITES = { milan: ['Pubcrawl Milan', 'https://tbakker04.github.io/Pubcrawl-Milan-/'], amsterdam: ['Pubcrawl Amsterdam', 'https://tbakker04.github.io/Pubcrawl-Amsterdam/'] };
-  var PREFIX = { MIL: 'milan', AMS: 'amsterdam' };
+  // all cities (cities.json, put in the page by build.py): name and website per city, and which code prefix is which city
+  var SITES = {}, PREFIX = {}, CL = window.PC_CITIES || {};
+  Object.keys(CL).forEach(function(k) { SITES[k] = [CL[k].brand, CL[k].site]; PREFIX[CL[k].prefix] = k; });
   var BASE_PREFIX = CFG.storagePrefix;
   function norm(c) {
     c = String(c || '').replace(/\s+/g, '').replace(/[^A-Za-z0-9-]/g, '');
