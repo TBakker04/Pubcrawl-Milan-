@@ -1763,8 +1763,8 @@ window.PC_EN = {"Verbinden…": "Connecting…", "Live: scores op alle telefoons
     return a.filter(function(p) { return P.indexOf(p[0]) >= 0 && P.indexOf(p[1]) >= 0; });
   };
   window.PCHasRoster = function() { var r = S.kv.get('roster', null); return !!(r && Array.isArray(r.players) && r.players.length >= 2); };
-  // number of teams (2-6), chosen by the group; never more than half the players (min. 2)
-  window.PCMaxTeams = function(n) { return Math.max(2, Math.min(6, Math.floor(n / 2))); };
+  // number of teams (2-6), chosen by the group: at most one team per player, so 4 players can play as 4 teams of 1
+  window.PCMaxTeams = function(n) { return Math.max(2, Math.min(6, n)); };
   window.PCTeamCount = function() {
     var r = S.kv.get('roster', null), t = r && +r.teams || 2;
     return Math.max(2, Math.min(window.PCMaxTeams(window.PCPlayers().length), t));
