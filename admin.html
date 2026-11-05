@@ -82,7 +82,7 @@
   </div>
 </main>
 <script src="firebase-config.js"></script>
-<script src="cities.js"></script>
+<script>document.write('<script src="cities.js?t=' + Date.now() + '"><\/script>'); // always the newest list of cities, never a cached one</script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
