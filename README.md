@@ -1,5 +1,5 @@
-# Pubcrawl Milan
+# Pubcrawl Milano
 
-De website van het pub golf-spel in Milaan (GitHub Pages). Spelen kan alleen met een geldige spelcode.
+Deze site is verhuisd naar **https://pubgolf.eu/milan/**. Alle pagina's hier sturen door, met dezelfde spelcode (`?code=`).
 
-© 2026 Thobias Bakker · Pubcrawl. Alle rechten voorbehouden. Kopiëren of hergebruiken van het spel, de teksten of het ontwerp zonder schriftelijke toestemming is niet toegestaan. Zie [voorwaarden.html](voorwaarden.html).
+© 2026 Thobias Bakker · Pubcrawl. Alle rechten voorbehouden. Kopiëren of hergebruiken van het spel, de teksten of het ontwerp zonder schriftelijke toestemming is niet toegestaan. Zie https://pubgolf.eu/voorwaarden.html.
